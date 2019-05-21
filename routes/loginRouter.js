@@ -1,13 +1,14 @@
 const router = require("express").Router();
 const Users = require("./model")("users");
+const bcrypt = require("bcryptjs");
 const handleRes = require("./tools/handleRes");
 
 router.post("/", async (req, res) => {
     try {
         const {username, password} = req.body;
-        const user = Users.findBy({username});
+        const user = await Users.findBy({username});
         if (
-            user && bcrypt.compareSync(
+            username && bcrypt.compareSync(
                 password, 
                 user.password
             )
@@ -19,7 +20,7 @@ router.post("/", async (req, res) => {
                 );
         }
         if (
-            !user || !bcrypt.compareSync(
+            !username || !bcrypt.compareSync(
                     password,
                     user.password    
             )

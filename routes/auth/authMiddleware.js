@@ -1,9 +1,11 @@
 const Users = require("../model")("users");
 const bcrypt = require("bcryptjs");
+const handleRes = require("../tools/handleRes");
 
-module.exports = function(req, res, next) {
+module.exports = async function(req, res, next) {
     try {
         const {username, password} = req.headers;
+        console.log("Here is req.headers", req.headers);
         if (username && password) {
             const user = await Users.findBy({username});
             if (
@@ -20,7 +22,7 @@ module.exports = function(req, res, next) {
                     user.password    
                 )
             ) {
-                handleRes(
+                await handleRes(
                     res,
                     401,
                     {success: false, message: "Invalid Credentials"}

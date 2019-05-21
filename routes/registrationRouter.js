@@ -15,7 +15,7 @@ router.post("/", async (req, res) => {
         const saved = await Users.add(user);
         if (saved) {
             console.log("Here is the status code", res.statusCode)
-            handleRes(res, 200, {success: true})
+            await handleRes(res, 200, {success: true})
         }
     } catch (error) {
         console.log("Here is the status code in catch: ", res.statusCode)
