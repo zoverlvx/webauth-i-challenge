@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const Users = require("./model")("users");
 const bcrypt = require("bcryptjs");
-const handleRes = require("./tools/handleRes");
 
 router.post("/login", async (req, res) => {
     try {
@@ -13,12 +12,8 @@ router.post("/login", async (req, res) => {
                 user.password
             )
         ) {
-                req.session.user = user;
-                handleRes(
-                    res, 
-                    200, 
-                    {success: true}
-                );
+            req.session.user = user;
+            res.status(200).json({success: true});
         }
         if (
             !username || !bcrypt.compareSync(
@@ -26,14 +21,10 @@ router.post("/login", async (req, res) => {
                     user.password    
             )
         ) {
-                handleRes(
-                    res, 
-                    401, 
-                    {message: "Invalid Credentials"}
-                );
+            res.status(401).json({message: "Invalid Credentials"})
         }
     } catch (error) {
-        handleRes(res, 500, error);
+        res.status(500).json({error});
     }
 });
 
@@ -48,10 +39,10 @@ router.post("/registration", async (req, res) => {
     try {
         const saved = await Users.add(user);
         if (saved) {
-            await handleRes(res, 200, {success: true})
+            res.status(200).json({success: true});
         }
     } catch (error) {
-        handleRes(res, 500, error)
+        res.status(500).json({error});
     }
     
 });
